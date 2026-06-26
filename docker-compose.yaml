@@ -20,7 +20,7 @@ services:
     container_name: loki
     restart: unless-stopped
     ports:
-      - "3100:3100"
+      - "${LOKI_PORT:-3100}:3100"
     volumes:
       - loki_data:/loki
       - ./config/loki.yml:/etc/loki/local-config.yaml:ro
@@ -51,7 +51,7 @@ services:
     container_name: prometheus
     restart: unless-stopped
     ports:
-      - "9090:9090"
+      - "${PROMETHEUS_PORT:-9090}:9090"
     volumes:
       - prometheus_data:/prometheus
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -102,12 +102,12 @@ services:
     container_name: grafana
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "${GRAFANA_PORT:-3000}:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-changeme}
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_SERVER_ROOT_URL=http://localhost:3000
+      - GF_SERVER_ROOT_URL=http://localhost:${GRAFANA_PORT:-3000}
       - GF_FEATURE_TOGGLES_ENABLE=lokiLogsDataplane
     volumes:
       - grafana_data:/var/lib/grafana
